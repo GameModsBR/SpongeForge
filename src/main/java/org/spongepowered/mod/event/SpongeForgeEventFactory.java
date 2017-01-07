@@ -807,9 +807,29 @@ public class SpongeForgeEventFactory {
             }
         } else if (spongeEvent instanceof InteractBlockEvent.Secondary) {
             PlayerInteractEvent.RightClickBlock forgeEvent = null;
+            InteractBlockEvent.Secondary spongeInteractEvent = (InteractBlockEvent.Secondary) spongeEvent;
             if (spongeEvent instanceof InteractBlockEvent.Secondary.MainHand) {
                 final ItemStack heldItem = entityPlayerMP.getHeldItem(EnumHand.MAIN_HAND);
                 forgeEvent = new PlayerInteractEvent.RightClickBlock(entityPlayerMP, EnumHand.MAIN_HAND, pos, face.orElse(null), hitVec);
+                forgeEvent.setCanceled(spongeEvent.isCancelled());
+                switch(spongeInteractEvent.getUseItemResult()) {
+                    case FALSE:
+                        forgeEvent.setUseItem(Result.DENY);
+                        break;
+
+                    case TRUE:
+                        forgeEvent.setUseItem(Result.ALLOW);
+                        break;
+                }
+                switch(spongeInteractEvent.getUseBlockResult()) {
+                    case FALSE:
+                        forgeEvent.setUseBlock(Result.DENY);
+                        break;
+
+                    case TRUE:
+                        forgeEvent.setUseItem(Result.DENY);
+                        break;
+                }
                 ((IMixinEventBus) MinecraftForge.EVENT_BUS).post(forgeEvent, true);
                 if (forgeEvent.isCanceled()) {
                     spongeEvent.setCancelled(true);
@@ -817,6 +837,25 @@ public class SpongeForgeEventFactory {
             } else if (spongeEvent instanceof InteractBlockEvent.Secondary.OffHand) {
                 final ItemStack heldItem = entityPlayerMP.getHeldItem(EnumHand.OFF_HAND);
                 forgeEvent = new PlayerInteractEvent.RightClickBlock(entityPlayerMP, EnumHand.OFF_HAND, pos, face.orElse(null), hitVec);
+                forgeEvent.setCanceled(spongeEvent.isCancelled());
+                switch(spongeInteractEvent.getUseItemResult()) {
+                    case FALSE:
+                        forgeEvent.setUseItem(Result.DENY);
+                        break;
+
+                    case TRUE:
+                        forgeEvent.setUseItem(Result.ALLOW);
+                        break;
+                }
+                switch(spongeInteractEvent.getUseBlockResult()) {
+                    case FALSE:
+                        forgeEvent.setUseBlock(Result.DENY);
+                        break;
+
+                    case TRUE:
+                        forgeEvent.setUseItem(Result.DENY);
+                        break;
+                }
                 ((IMixinEventBus) MinecraftForge.EVENT_BUS).post(forgeEvent, true);
                 if (forgeEvent.isCanceled()) {
                     spongeEvent.setCancelled(true);
