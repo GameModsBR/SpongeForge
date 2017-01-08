@@ -801,6 +801,7 @@ public class SpongeForgeEventFactory {
         }
         if (spongeEvent instanceof InteractBlockEvent.Primary) {
             PlayerInteractEvent.LeftClickBlock forgeEvent = new PlayerInteractEvent.LeftClickBlock(entityPlayerMP, pos, face.orElse(null), hitVec);
+            forgeEvent.setCanceled(spongeEvent.isCancelled());
             ((IMixinEventBus) MinecraftForge.EVENT_BUS).post(forgeEvent, true);
             if (forgeEvent.isCanceled()) {
                 spongeEvent.setCancelled(true);
